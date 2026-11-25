@@ -1,0 +1,691 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>لئون وازاری · کتاب‌شناسی</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Markazi+Text:wght@400;500;600;700&family=Vazirmatn:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EDEBE6; --sheet:#F4F2ED; --ink:#141414; --muted:#6D6A63; --cobalt:#1F3FB0;
+  --rule:rgba(20,20,20,.9); --ease:cubic-bezier(.2,.8,.2,1);
+  --H:min(46vh,31vw);
+  --sans:"Vazirmatn",Tahoma,system-ui,sans-serif;
+  --serif:"Markazi Text","Vazirmatn",serif;
+  color-scheme:light;
+  box-sizing:border-box;
+}
+*,*::before,*::after{box-sizing:inherit}
+html,body{margin:0;background:var(--paper);color:var(--ink)}
+html.locked{overflow:hidden}
+body{font-family:var(--sans);-webkit-font-smoothing:antialiased;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent}
+@media (pointer:fine){html,body,button,a{cursor:none}}
+button{font:inherit;color:inherit;background:none;border:0;padding:0}
+:focus-visible{outline:2px solid var(--cobalt);outline-offset:3px}
+
+.track{position:relative;width:1px}
+.track i{display:block;scroll-snap-align:start;scroll-snap-stop:normal}
+html{scroll-snap-type:y mandatory}
+html.free{scroll-snap-type:none}
+.scene{position:fixed;inset:0}
+
+.grain{position:fixed;inset:0;z-index:40;pointer-events:none;opacity:.55;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .45  0 0 0 0 .42  0 0 0 0 .38  0 0 0 .22 0'/></filter><rect width='220' height='220' filter='url(%23n)'/></svg>")}
+
+.lbl{font-family:var(--sans);font-weight:500;font-size:12px;line-height:1.2}
+.box{display:inline-flex;align-items:center;height:26px;padding:0 10px;border:1px solid var(--rule);color:var(--ink);text-decoration:none;white-space:nowrap}
+
+.top{position:fixed;top:0;left:0;right:0;height:84px;padding:env(safe-area-inset-top,0px) 32px 0;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;z-index:30}
+.top .back{justify-self:start}
+.top .career{justify-self:end;white-space:nowrap}
+.logo{display:flex;flex-direction:column;align-items:center;gap:2px;color:var(--cobalt);text-align:center}
+.logo b{font-family:var(--serif);font-weight:700;font-size:29px;line-height:1.2}
+.logo small{font-family:var(--sans);font-weight:500;font-size:10.5px;line-height:1.2}
+
+.tabs{position:fixed;left:50%;transform:translateX(-50%);top:calc(50% - var(--H)/2 - 92px);display:flex;z-index:20}
+.tabs .ind{position:absolute;top:0;left:0;height:28px;background:var(--cobalt);transition:width .6s var(--ease),transform .6s var(--ease);pointer-events:none}
+.tabs button{position:relative;height:28px;padding:0 13px;border:1px solid var(--rule);margin-inline-start:-1px;white-space:nowrap;transition:color .45s}
+.tabs button.on{color:#fff}
+
+.shelf{position:fixed;left:0;right:0;top:calc(50% - var(--H)/2 - 40px);height:calc(var(--H) + 80px);perspective:2200px;perspective-origin:50% 50%;touch-action:pan-y;z-index:10}
+.stage{position:absolute;left:50%;top:50%;width:0;height:0;transform-style:preserve-3d}
+.book{position:absolute;left:0;top:0;width:0;height:0;transform-style:preserve-3d;will-change:transform}
+.face{position:absolute;height:var(--H);top:calc(var(--H)/-2);backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:2px;overflow:hidden}
+.face svg{display:block;width:100%;height:100%}
+.shade{position:absolute;inset:0;border-radius:inherit;background:#000;opacity:0;pointer-events:none;will-change:opacity}
+.face{contain:layout paint}
+.sp{width:var(--ws);left:calc(var(--ws)/-2);transform:translateZ(calc(var(--d)/2))}
+/* Persian books bind on the right, so the front cover is the box's left side */
+.cv{width:var(--d);left:calc(var(--d)/-2);transform:rotateY(-90deg) translateZ(calc(var(--ws)/2));box-shadow:0 30px 60px -28px rgba(20,16,10,.55);border-radius:2px 4px 4px 2px}
+
+.play{position:fixed;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;border:1px solid var(--cobalt);color:var(--cobalt);background:rgba(237,235,230,.8);display:grid;place-items:center;z-index:25;transform:scale(0)}
+.play svg{width:20px;height:14px;fill:none;stroke:currentColor;stroke-width:1.3;stroke-linejoin:round}
+
+.cap{position:fixed;left:50%;transform:translateX(-50%);top:calc(50% + var(--H)/2 + 26px);display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none;z-index:20}
+.mask{position:relative;overflow:hidden;width:min(92vw,760px);text-align:center}
+.mask>span{display:block}
+.mask>span+span{position:absolute;inset:0}
+.cap .t{font-family:var(--serif);font-weight:600;font-size:38px;line-height:1.45}
+.cap .s{color:var(--cobalt)}
+.cap .y{font-family:var(--sans);font-weight:500;font-size:13px;line-height:1.5}
+
+.arw{position:fixed;top:calc(50% + var(--H)/2 + 40px);width:48px;height:48px;display:grid;place-items:center;z-index:20}
+.arw svg{width:20px;height:12px;stroke:currentColor;stroke-width:1.2;fill:none}
+.arw.l{left:20px}.arw.r{right:20px}
+
+.foot{position:fixed;left:32px;right:32px;bottom:calc(24px + env(safe-area-inset-bottom,0px));display:flex;justify-content:space-between;align-items:center;z-index:20}
+.foot a{color:var(--ink);text-decoration:none}
+.hint{color:var(--muted)}
+
+.cur{position:fixed;left:0;top:0;width:62px;height:62px;margin:-31px 0 0 -31px;z-index:100;pointer-events:none;display:none}
+@media (pointer:fine){.cur{display:block}}
+.cur .ring{position:absolute;inset:0;border:1.5px solid var(--ink);border-radius:50%;transition:transform .5s var(--ease),background-color .4s var(--ease),border-color .4s var(--ease)}
+.cur .dot{position:absolute;left:50%;top:50%;width:6px;height:6px;margin:-3px;border-radius:50%;background:var(--ink);transition:transform .4s var(--ease)}
+.cur .txt{position:absolute;inset:0;display:grid;place-items:center;color:#fff;font:600 12px/1 var(--sans);transform:scale(0);transition:transform .45s var(--ease)}
+.cur.spine .ring{transform:scale(.72)}
+.cur.btn .ring{transform:scale(.55)}.cur.btn .dot{transform:scale(0)}
+.cur.open .ring{transform:scale(1.75);background:var(--cobalt);border-color:var(--cobalt)}
+.cur.open .dot{transform:scale(0)}.cur.open .txt{transform:scale(1)}
+
+
+/* ===== reading mode: the open book ===== */
+.backdrop{position:fixed;inset:0;z-index:50;background:var(--sheet);visibility:hidden;clip-path:circle(0 at 50% 50%)}
+.opener{position:fixed;inset:0;z-index:55;perspective:2400px;pointer-events:none;visibility:hidden}
+.opener.reading .ob{pointer-events:auto}
+.ob{position:absolute;transform-style:preserve-3d;will-change:transform}
+.spread{position:absolute;inset:0;transform-style:preserve-3d}
+.pg,.sheet{position:absolute;inset:0;transform-origin:100% 50%;transform-style:preserve-3d}
+.pg{background:#F6F2E8;border-radius:3px 1px 1px 3px;container-type:size;
+  box-shadow:-1px 1px 0 #E3DCCB,-2px 2px 0 #F2EDE2,-3px 3px 0 #DCD4C1,-4px 4px 0 #EFE9DC,-5px 5px 0 #D5CCB8,0 50px 90px -40px rgba(20,16,10,.5)}
+.pf{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:#F6F2E8;container-type:size;overflow:hidden}
+.pf.f{border-radius:3px 1px 1px 3px}
+.pf.b{transform:rotateY(180deg);border-radius:1px 3px 3px 1px}
+/* gutter shadow toward the spine, which is on the right of a left page and the left of a right page */
+.pf.f::before,.pg>.page{overflow:hidden;border-radius:inherit}
+.pg::before{content:"";position:absolute;inset:0;background:linear-gradient(to left,rgba(60,45,25,.16),rgba(60,45,25,.04) 7%,transparent 16%);pointer-events:none;border-radius:inherit}
+.pf.b::before{content:"";position:absolute;inset:0;background:linear-gradient(to right,rgba(60,45,25,.16),rgba(60,45,25,.04) 7%,transparent 16%);pointer-events:none;border-radius:inherit}
+.pf .sh{position:absolute;inset:0;background:#2a2015;opacity:0;pointer-events:none}
+.front{position:absolute;inset:0;transform-origin:100% 50%;transform-style:preserve-3d}
+.front svg{position:absolute;inset:0;width:100%;height:100%;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:2px 3px 3px 2px}
+.endpaper{position:absolute;inset:-1.5% -1.5% -1.5% 0;transform:rotateY(180deg);backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:4px 2px 2px 4px;background:var(--ep,#888)}
+
+/* page typography, all sized to the page */
+.page{position:absolute;inset:0;padding:11cqh 10cqw 12cqh;display:flex;flex-direction:column;color:var(--ink);text-align:start}
+.page.center{align-items:center;justify-content:center;text-align:center}
+.pn{position:absolute;bottom:5.5cqh;font:500 max(2cqh,9px)/1 var(--sans);color:var(--muted)}
+.f .pn{left:10cqw}.b .pn{right:10cqw}
+.run{position:absolute;top:5.5cqh;left:10cqw;right:10cqw;text-align:center;font:500 max(1.9cqh,9px)/1 var(--sans);color:var(--muted)}
+.tp-a{font:500 3.2cqh/1.4 var(--serif);color:var(--muted)}
+.tp-t{font:700 9.5cqh/1.2 var(--serif);margin:4cqh 0 3.5cqh}
+.tp-p{position:absolute;bottom:9cqh;left:0;right:0;font:500 max(2.2cqh,10px)/1.4 var(--sans);color:var(--muted)}
+.orn{width:20cqw;height:2.4cqh;color:var(--cobalt);flex:none}
+.ded{font:400 3.6cqh/1.7 var(--serif);color:var(--muted);margin-top:-14cqh}
+.h{font:700 4.6cqh/1.3 var(--serif);color:var(--cobalt);margin:0 0 2.4cqh}
+.body{font:400 max(3.15cqh,13px)/1.85 var(--serif);margin:0;text-align:justify;text-align-last:start}
+.small{font:500 max(2cqh,10px)/1.6 var(--sans);color:var(--muted)}
+.id{margin:3cqh 0 0;display:grid;grid-template-columns:auto 1fr;gap:1.6cqh 4cqw;font:400 max(2.7cqh,12px)/1.5 var(--serif)}
+.id dt{color:var(--muted)}.id dd{margin:0}
+.id-note{margin-top:auto;font:400 max(2.1cqh,10px)/1.7 var(--sans);color:var(--muted)}
+.plate{margin:auto 0 0;border:1px solid rgba(20,20,20,.25);padding:2.4cqw;background:#FBF8F1}
+.plate svg{display:block;width:100%;height:auto}
+.cap2{margin:2.4cqh 0 auto;text-align:center;font:400 max(2.4cqh,11px)/1.5 var(--serif);color:var(--muted)}
+.chap-n{font:500 max(2.2cqh,10px)/1 var(--sans);color:var(--muted);margin-bottom:1.6cqh}
+.endmark{margin-top:auto;display:flex;flex-direction:column;align-items:center;gap:2cqh;text-align:center}
+.endmark .btn{font:500 max(2.1cqh,11px)/1 var(--sans);color:var(--cobalt);border:1px solid var(--cobalt);padding:1.6cqh 3.4cqw}
+
+/* reader chrome */
+.rui{position:fixed;inset:0;z-index:58;pointer-events:none;visibility:hidden}
+.rui .logo{position:absolute;top:0;left:0;right:0;height:84px;justify-content:center}
+.rui .close{position:absolute;top:29px;right:32px;pointer-events:auto}
+.rui .nav{position:absolute;top:50%;width:52px;height:52px;margin-top:-26px;display:grid;place-items:center;pointer-events:auto;transition:color .3s}
+.rui .nav[disabled]{color:#bdb8ad}
+.rui .nav svg{width:22px;height:12px;stroke:currentColor;stroke-width:1.2;fill:none}
+.rui .nav.n{left:24px}.rui .nav.p{right:24px}
+.rui .bar{position:absolute;left:0;right:0;bottom:calc(26px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;align-items:center;gap:6px}
+.rui .bar .hint2{color:var(--muted)}
+.rui .m{overflow:hidden;display:block}
+.rui .m>*{display:block}
+
+@media (max-width:767px){
+  :root{--H:min(58vw,40svh)}
+  .top{height:64px;padding:env(safe-area-inset-top,0px) 16px 0}
+  .logo b{font-size:23px}.logo small{font-size:9px}
+  .lbl{font-size:10.5px}
+  .top .career,.hint{display:none}
+  .tabs{top:calc(50% - var(--H)/2 - 76px)}
+  .tabs button{padding:0 8px}
+  .cap .t{font-size:30px}
+  .arw.l{left:6px}.arw.r{right:6px}
+  .foot{left:16px;right:16px;bottom:calc(18px + env(safe-area-inset-bottom,0px))}
+  .rui .logo{height:64px}.rui .close{top:19px;right:16px}
+  .rui .nav{top:auto;bottom:calc(14px + env(safe-area-inset-bottom,0px));margin:0}.rui .nav.n{left:10px}.rui .nav.p{right:10px}
+  .rui .bar{bottom:calc(26px + env(safe-area-inset-bottom,0px))}.rui .hint2{display:none}
+  .d-title{font-size:46px}.d-syn{font-size:20px}
+}
+</style>
+</head>
+<body>
+<div class="track" id="track"></div>
+
+<div class="scene">
+  <header class="top">
+    <a class="lbl box back" href="#">بازگشت</a>
+    <div class="logo"><b>لئون وازاری</b><small>کتاب‌شناسی یک نویسنده</small></div>
+    <span class="lbl career">سال‌های نوشتن ۱۹۵۸ تا ۱۹۸۹</span>
+  </header>
+
+  <nav class="tabs" id="tabs" aria-label="دهه‌ها">
+    <span class="ind" id="ind"></span>
+    <button class="lbl" data-dec="all">همه</button>
+    <button class="lbl" data-dec="1950">دههٔ ۱۹۵۰</button>
+    <button class="lbl" data-dec="1960">دههٔ ۱۹۶۰</button>
+    <button class="lbl" data-dec="1970">دههٔ ۱۹۷۰</button>
+    <button class="lbl" data-dec="1980">دههٔ ۱۹۸۰</button>
+  </nav>
+
+  <section class="shelf" id="shelf" aria-label="قفسهٔ کتاب‌ها"><div class="stage" id="stage"></div></section>
+
+  <button class="play" id="play" aria-label="باز کردن کتاب"><svg viewBox="0 0 20 14"><path d="M10 3 C7 1 4 1 1 2 V13 C4 12 7 12 10 13 C13 12 16 12 19 13 V2 C16 1 13 1 10 3 Z M10 3 V13"/></svg></button>
+
+  <div class="cap" id="cap" aria-live="polite">
+    <div class="mask t" id="cT"></div>
+    <div class="mask lbl s" id="cS"></div>
+    <div class="mask y" id="cY"></div>
+  </div>
+
+  <button class="arw l" id="next" aria-label="کتاب بعدی"><svg viewBox="0 0 20 12"><path d="M6 1 L1 6 L6 11 M1 6 H19"/></svg></button>
+  <button class="arw r" id="prev" aria-label="کتاب قبلی"><svg viewBox="0 0 20 12"><path d="M14 1 L19 6 L14 11 M19 6 H1"/></svg></button>
+
+  <footer class="foot">
+    <span class="lbl">© لئون وازاری. همهٔ حقوق محفوظ است.</span>
+    <span class="lbl hint" aria-hidden="true">برای ورق زدن قفسه اسکرول کنید</span>
+    <span class="lbl"><a href="#">فیسبوک</a> / <a href="#">توییتر</a></span>
+  </footer>
+</div>
+
+<div class="grain"></div>
+
+<div class="backdrop" id="backdrop"></div>
+<div class="opener" id="opener" role="dialog" aria-modal="true" aria-label="کتاب باز">
+  <div class="ob" id="ob"><div class="spread" id="spread"></div></div>
+</div>
+<div class="rui" id="rui">
+  <div class="logo"><span class="m"><b>لئون وازاری</b></span><span class="m"><small>کتاب‌شناسی یک نویسنده</small></span></div>
+  <span class="m close"><button class="lbl box" id="close">بستن کتاب</button></span>
+  <button class="nav n" id="pnext" aria-label="صفحهٔ بعد"><svg viewBox="0 0 22 12"><path d="M6 1 L1 6 L6 11 M1 6 H21"/></svg></button>
+  <button class="nav p" id="pprev" aria-label="صفحهٔ قبل"><svg viewBox="0 0 22 12"><path d="M16 1 L21 6 L16 11 M21 6 H1"/></svg></button>
+  <div class="bar"><span class="m"><span class="lbl" id="pcount"></span></span><span class="m hint2"><span class="lbl">برای ورق زدن روی صفحه کلیک کنید، اسکرول کنید یا از کلیدهای جهت استفاده کنید</span></span></div>
+</div>
+
+<div class="cur" id="cur"><div class="ring"></div><div class="dot"></div><div class="txt">باز کن</div></div>
+
+<script>
+const fa = n => String(n).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
+const ORD = ['اول','دوم','سوم','چهارم','پنجم','ششم','هفتم','هشتم','نهم','دهم','یازدهم','دوازدهم'];
+
+const CREAM='#EFE7D6', INK='#1A1917', COB='#1F3FB0', RED='#D6402B';
+/* title, title lines, year, genre, pages, synopsis, cover bg, ink, accent, motif */
+const BOOKS = [
+ ['درهٔ خاموش',['درهٔ','خاموش'],1958,'رمان',212,'معلمی به روستای کوهستانی‌ای برمی‌گردد که پدرش را تبعید کرده بود، و می‌بیند دره هنوز تک‌تک رازهایش را نگه داشته است.','#E6DCC6',INK,INK,'valley'],
+ ['ساعت آبی',['ساعت','آبی'],1962,'رمان عاشقانه',188,'در غروبی طولانی در شهری بندری، زنی بیوه و مردی غریبه دروغ‌های کوچک ردوبدل می‌کنند تا نور تمام شود.',COB,CREAM,CREAM,'bluehour'],
+ ['رودِ نمک',['رودِ','نمک'],1964,'رمان',264,'دو برادر قایقی پر از نمک را در مسیر رود به شهری می‌کشانند که دیگر هیچ‌چیزِ بارشان را نمی‌خواهد.','#ECE2CD',INK,RED,'river'],
+ ['آخرین تابستان',['آخرین','تابستان'],1966,'رمان',240,'تابستانِ پیش از آنکه سد روستایشان را زیر آب ببرد، سه دوست هرچه را نمی‌توانند با خود ببرند به آتش می‌کشند.',INK,CREAM,RED,'summer'],
+ ['جادهٔ سبز',['جادهٔ','سبز'],1969,'رمان معمایی',226,'نقشه‌برداری که جاده‌ای جنگلی را می‌پیماید، مدام به ردپاهایی برمی‌خورد که همیشه یک روز از او جلوترند.','#1E5A45',CREAM,CREAM,'green'],
+ ['ظهرِ خاکستر',['ظهرِ','خاکستر'],1971,'رمان',234,'سواری از بیابانی سفید می‌گذرد تا بدهی‌ای قدیمی را تسویه کند، و دیر می‌فهمد چه کسی او را فرستاده است.','#EEE6D3',COB,COB,'noon'],
+ ['ناظر',['ناظر'],1973,'رمان هیجانی',198,'نگهبانی شبانه کم‌کم گمان می‌کند ساختمانی که از آن محافظت می‌کند، حالا خودش او را زیر نظر گرفته است.','#D8C6A2',INK,INK,'observer'],
+ ['پرندگانِ افتاده',['پرندگانِ','افتاده'],1975,'رمان',252,'وقتی پرنده‌ها بر فراز شهری مرزی دیگر نمی‌خوانند، تنها دخترِ شهردار است که به دنبال دلیلش می‌رود.','#EAE3D2',INK,INK,'birds'],
+ ['نوری در طوفان',['نوری','در طوفان'],1978,'رمان',286,'نگهبان فانوس دریایی و پسرش طوفانی سه‌روزه را کنار ملوانی کشتی‌شکسته سر می‌کنند که نامش را نمی‌گوید.','#22211F',CREAM,RED,'storm'],
+ ['مدِ بلند',['مدِ','بلند'],1981,'داستان‌های کوتاه',204,'همسر ماهیگیری روی دیوار بندر مدها را می‌شمارد، در حالی که قایق شوهرش به خانه برنمی‌گردد.','#18308C',CREAM,CREAM,'tide'],
+ ['جنگی آرام',['جنگی','آرام'],1985,'رمان طنز',218,'دو همسایه سی سال بر سر دیوار یک باغ جنگی بی‌صدا به راه می‌اندازند و هیچ‌کدام نمی‌گوید از کجا شروع شد.','#2E2B28',CREAM,'#C9B48A','war'],
+ ['درِ سرخ',['درِ','سرخ'],1989,'رمان هیجانی',246,'آپاراتچی‌ای در آخرین شبِ یک سینما، حلقه‌فیلمی ناشناس را در راهروهای آن دنبال می‌کند.','#8A2920',CREAM,'#E8654A','door'],
+].map((b,i)=>({title:b[0],lines:b[1],year:b[2],genre:b[3],pages:b[4],syn:b[5],bg:b[6],ink:b[7],acc:b[8],motif:b[9],i}));
+
+const EXC=[
+'برف آن سال زودتر از همیشه نشست. وقتی اتوبوس در پیچ آخر جاده ایستاد، دره همان‌طور بود که پدرش وصفش کرده بود: آرام، سفید، و پر از پنجره‌هایی که پشتشان کسی نگاه می‌کرد.',
+'ساعت شش بود و بندر هنوز بوی نمک و قیر می‌داد. زن کنار پنجرهٔ کافه نشسته بود و فنجانش را آن‌قدر چرخاند که مرد غریبه بالاخره پرسید آیا جای کسی را گرفته است.',
+'قایق را پیش از سپیده به آب انداختیم. برادرم طناب را دور مچش پیچید و گفت تا شهر سه روز راه است، اگر رود با ما راه بیاید.',
+'مهندس‌ها با کلاه‌های سفید آمدند و روی دیوار مدرسه با گچ خطی کشیدند. گفتند آب تا اینجا بالا می‌آید. ما آن شب تصمیم گرفتیم پیش از آب، آتش برسد.',
+'ردپا تازه بود؛ هنوز آب در گودی پاشنه‌اش جمع نشده بود. نقشه‌بردار دفترش را باز کرد و تاریخ را نوشت، و بعد دید همین ردپا را دیروز هم، همین‌جا، کشیده است.',
+'آفتاب درست بالای سرش ایستاده بود و زیر پای اسب سایه‌ای نمانده بود. نامه را برای بار سوم خواند؛ امضایی نداشت، اما خط را می‌شناخت.',
+'شب دوازدهم بود که آسانسور بی‌آنکه کسی دکمه‌ای بزند، به طبقهٔ نهم رفت و برگشت. نگهبان در دفترش نوشت: هیچ اتفاقی نیفتاد. و بعد زیرش خط کشید.',
+'صبح آن روز شهر بی‌صدا بیدار شد. دختر شهردار پنجره را باز کرد و منتظر ماند، اما از درخت‌های میدان حتی صدای بال هم نیامد.',
+'موج سوم ملوان را روی سنگ‌ها انداخت. پسر چراغ را بالا گرفت و پدرش گفت: نامش را نپرس. دریا هرچه بخواهد بگوید، خودش می‌گوید.',
+'او هر روز دو خط روی دیوار بندر می‌کشید، یکی برای مد و یکی برای جزر. روز چهلم گچ تمام شد و قایق هنوز نیامده بود.',
+'اولین آجر را آقای صدری گذاشت، یا شاید آقای نیک‌نام؛ هیچ‌کدام یادشان نیست. اما هر دو مطمئن‌اند که دیوار از آن روز یک وجب به سمت دیگری جلو رفته است.',
+'آخرین سانس ساعت یازده تمام شد و سالن خالی شد. آپاراتچی حلقه‌ها را می‌شمرد که دید یکی اضافه است؛ روی قوطی‌اش با ماژیک سرخ فقط نوشته بودند: در.',
+];
+/* cover motifs, drawn in a 600×900 box (art area roughly y 420–790) */
+function motif(b){
+  const k=b.ink, a=b.acc, bg=b.bg;
+  switch(b.motif){
+    case 'valley': return `<circle cx="420" cy="470" r="38" fill="none" stroke="${k}" stroke-width="3"/>
+      <path d="M70 790 L210 560 L280 650 L380 500 L530 790Z" fill="${k}"/>
+      <path d="M210 560 L240 610 L225 640 M380 500 L410 560 L395 600" stroke="${bg}" stroke-width="3" fill="none"/>
+      <path d="M70 790 H530" stroke="${k}" stroke-width="3"/>`;
+    case 'bluehour': return `<circle cx="300" cy="590" r="120" fill="${a}"/><rect x="60" y="590" width="480" height="210" fill="${bg}"/>
+      ${[612,640,668,696,724,752].map((y,i)=>`<path d="M${180+i*14} ${y} H${420-i*14}" stroke="${a}" stroke-width="4"/>`).join('')}`;
+    case 'river': return `<circle cx="300" cy="530" r="88" fill="${a}"/>
+      ${[650,690,730,770].map(y=>`<path d="M70 ${y} q40 -18 80 0 t80 0 t80 0 t80 0 t80 0 t80 0" fill="none" stroke="${k}" stroke-width="3"/>`).join('')}`;
+    case 'summer': return `<path d="M300 430 C340 520 400 560 380 660 C370 720 330 780 300 790 C270 780 230 720 220 660 C210 600 250 580 260 520 C280 560 290 590 300 600 C310 560 300 500 300 430Z" fill="${a}"/>
+      <path d="M180 790 H420" stroke="${k}" stroke-width="3"/>`;
+    case 'green': return `<path d="M260 800 C260 720 380 700 370 640 C360 580 240 590 250 530 C258 480 330 470 320 430" fill="none" stroke="${a}" stroke-width="16" stroke-linecap="round"/>
+      ${[[120,520],[470,560],[140,690],[480,720],[90,610],[510,470]].map(([x,y])=>`<path d="M${x} ${y} l-22 46 h44z" fill="${a}" opacity=".85"/>`).join('')}`;
+    case 'noon': return `<circle cx="300" cy="560" r="118" fill="none" stroke="${k}" stroke-width="4"/>
+      <path d="M60 680 H540" stroke="${k}" stroke-width="4"/>
+      ${[712,738,762,784].map((y,i)=>`<path d="M${100+i*30} ${y} H${500-i*30}" stroke="${k}" stroke-width="2" stroke-dasharray="${10+i*4} ${12+i*3}"/>`).join('')}
+      <path d="M292 640 v40 M300 640 v40 M282 652 h36 v-14 h-36z" stroke="${k}" stroke-width="5" fill="${k}"/>`;
+    case 'observer': return `<path d="M90 600 Q300 440 510 600 Q300 760 90 600Z" fill="none" stroke="${k}" stroke-width="5"/>
+      <circle cx="300" cy="600" r="78" fill="${k}"/><circle cx="326" cy="574" r="16" fill="${bg}"/>
+      ${[0,1,2,3,4,5,6].map(i=>`<path d="M${120+i*60} ${520-Math.sin(i/6*Math.PI)*60} l${-6+i*2} -30" stroke="${k}" stroke-width="3"/>`).join('')}`;
+    case 'birds': return `<path d="M120 790 C180 700 200 640 190 560 M190 640 L250 600 M175 700 L120 670" stroke="${k}" stroke-width="5" fill="none" stroke-linecap="round"/>
+      ${[[330,480,1],[420,540,.8],[360,600,.6],[470,450,.55],[300,680,.7]].map(([x,y,s])=>`<path d="M${x-40*s} ${y} q${20*s} ${-18*s} ${40*s} 0 q${20*s} ${-18*s} ${40*s} 0" fill="none" stroke="${k}" stroke-width="5" stroke-linecap="round"/>`).join('')}`;
+    case 'storm': return `<path d="M300 520 L120 470 M300 520 L120 560 M300 520 L480 470 M300 520 L480 560" stroke="${a}" stroke-width="3" opacity=".9"/>
+      <rect x="282" y="500" width="36" height="34" fill="${a}"/><path d="M278 500 L300 476 L322 500Z" fill="${k}"/>
+      <path d="M284 534 L270 730 H330 L316 534Z" fill="${k}"/><path d="M276 600 H324 M274 650 H326" stroke="${a}" stroke-width="10"/>
+      ${[740,768].map(y=>`<path d="M80 ${y} q30 -16 60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0" fill="none" stroke="${k}" stroke-width="3"/>`).join('')}`;
+    case 'tide': return `<circle cx="300" cy="500" r="58" fill="${a}"/>
+      ${Array.from({length:9},(_,i)=>{const y=600+i*22,w=230-i*22;return `<path d="M${300-w} ${y} H${300+w}" stroke="${a}" stroke-width="${i%2?2:4}"/>`}).join('')}`;
+    case 'war': return `<path d="M290 470 H310 V790 H290Z" fill="${a}"/>
+      ${[500,540,580,620,660,700,740].map(y=>`<path d="M290 ${y} H310" stroke="${bg}" stroke-width="3"/>`).join('')}
+      <path d="M110 790 V690 L170 640 L230 690 V790Z M370 790 V690 L430 640 L490 690 V790Z" fill="none" stroke="${k}" stroke-width="4"/>
+      <path d="M155 790 V740 H185 V790 M415 790 V740 H445 V790" stroke="${k}" stroke-width="4" fill="none"/>
+      <path d="M80 790 H520" stroke="${k}" stroke-width="3"/>`;
+    case 'door': return `<path d="M200 800 V560 A100 100 0 0 1 400 560 V800Z" fill="${a}"/>
+      <path d="M250 800 V590 A50 50 0 0 1 350 590 V800Z" fill="#2A0E0A"/>
+      <path d="M300 800 V700" stroke="${a}" stroke-width="3"/><circle cx="300" cy="690" r="7" fill="${a}"/>`;
+  }
+}
+const cloth = (id,col) => `<pattern id="${id}" width="6" height="6" patternUnits="userSpaceOnUse"><path d="M0 0 H6 M0 3 H6" stroke="${col}" stroke-width=".6" opacity=".18"/><path d="M0 0 V6" stroke="${col}" stroke-width=".5" opacity=".1"/></pattern>`;
+function coverMarkup(b, uid){
+  const ls=b.lines, fs = ls.some(l=>l.length>6)?92:110, y0 = ls.length===1?300:240;
+  return `<defs>${cloth('c'+uid,b.ink)}<linearGradient id="g${uid}" x1="1" x2="0"><stop offset="0" stop-color="#000" stop-opacity=".28"/><stop offset=".05" stop-color="#000" stop-opacity="0"/></linearGradient></defs>
+  <rect width="600" height="900" fill="${b.bg}"/><rect width="600" height="900" fill="url(#c${uid})"/>
+  <rect x="34" y="34" width="532" height="832" fill="none" stroke="${b.ink}" stroke-width="2" opacity=".55"/>
+  <text x="300" y="104" text-anchor="middle" direction="rtl" font-family="Markazi Text" font-weight="500" font-size="34" fill="${b.ink}">لئون وازاری</text>
+  ${ls.map((l,j)=>`<text x="300" y="${y0+j*fs*1.02}" text-anchor="middle" direction="rtl" font-family="Markazi Text" font-weight="700" font-size="${fs}" fill="${b.ink}">${l}</text>`).join('')}
+  ${motif(b)}
+  <text x="300" y="842" text-anchor="middle" direction="rtl" font-family="Vazirmatn" font-weight="500" font-size="20" fill="${b.ink}" opacity=".8">نشر قفسه</text>
+  <rect width="600" height="900" fill="url(#g${uid})"/>`;
+}
+function spineMarkup(b, uid){
+  return `<defs>${cloth('s'+uid,b.ink)}<linearGradient id="h${uid}"><stop offset="0" stop-color="#000" stop-opacity=".22"/><stop offset=".25" stop-color="#fff" stop-opacity=".06"/><stop offset=".75" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".25"/></linearGradient></defs>
+  <rect width="120" height="900" fill="${b.bg}"/><rect width="120" height="900" fill="url(#s${uid})"/>
+  <path d="M10 40 H110 M10 48 H110 M10 852 H110 M10 860 H110" stroke="${b.ink}" stroke-width="2" opacity=".6"/>
+  <circle cx="60" cy="104" r="20" fill="${b.acc}"/>
+  <text transform="translate(60 460) rotate(90)" text-anchor="middle" dominant-baseline="central" direction="rtl" font-family="Markazi Text" font-weight="700" font-size="${b.title.length>11?50:58}" fill="${b.ink}">${b.title}</text>
+  <text x="60" y="812" text-anchor="middle" direction="rtl" font-family="Markazi Text" font-weight="600" font-size="26" fill="${b.ink}">وازاری</text>
+  <rect width="120" height="900" fill="url(#h${uid})"/>`;
+}
+
+const N = BOOKS.length, COPIES = 3, TOT = N*COPIES, BASE = N;
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const $ = id => document.getElementById(id);
+const stage=$('stage'), shelf=$('shelf'), track=$('track'), cur=$('cur'), play=$('play');
+
+const books=[];
+for(let v=0; v<TOT; v++){
+  const b=BOOKS[v%N], el=document.createElement('div'); el.className='book';
+  const sp=document.createElement('div'); sp.className='face sp';
+  sp.innerHTML=`<svg viewBox="0 0 120 900" preserveAspectRatio="none">${spineMarkup(b,v)}</svg>`;
+  const cv=document.createElement('div'); cv.className='face cv';
+  cv.innerHTML=`<svg viewBox="0 0 600 900" preserveAspectRatio="none">${coverMarkup(b,v)}</svg>`;
+  const sh1=document.createElement('div'); sh1.className='shade'; sp.append(sh1);
+  const sh2=document.createElement('div'); sh2.className='shade'; cv.append(sh2);
+  el.append(sp,cv); stage.append(el);
+  const o={el,sp,cv,sh1,sh2,v,lift:0,lt:0,r:0,tr:'',k1:'',k2:'',z:-1,vis:true};
+  el.addEventListener('pointerenter',()=>{hoverV=v});
+  el.addEventListener('pointerleave',()=>{if(hoverV===v)hoverV=-1});
+  el.addEventListener('click',()=>{
+    if(suppress){suppress=false;return}
+    if(Math.abs(o.r)<.5) openDetail(); else goTo(Math.round(T+o.r));
+  });
+  books.push(o);
+}
+
+let H,ws,d,gap,W,Hv,cyShelf,step;
+const probe=document.createElement('div'); probe.style.cssText='position:absolute;visibility:hidden;height:var(--H);width:1px;top:0';
+document.body.append(probe);
+function measure(){
+  H=probe.getBoundingClientRect().height; ws=H*120/900; d=H*600/900; gap=H*.022;
+  W=innerWidth; Hv=innerHeight;
+  stage.style.setProperty('--ws',ws+'px'); stage.style.setProperty('--d',d+'px');
+  const r=shelf.getBoundingClientRect(); cyShelf=r.top+r.height/2;
+  const idx = step ? scrollY/step : 5;
+  step=Math.max(Hv*.55,320);
+  track.innerHTML=Array.from({length:N},(_,i)=>`<i style="height:${i<N-1?step:Hv}px"></i>`).join('');
+  return idx;
+}
+
+let vel=0, s, T, hoverV=-1, active=-1, mx=-999,my=-999, cx=-999,cy=-999, tiltX=0,tiltY=0, onCover=false, isOpen=false, suppress=false, dragging=false;
+const B = r => Math.abs(r)<1 ? (r+Math.sin(Math.PI*r)/Math.PI)/2 : Math.sign(r)*.5;
+const F = r => r*(ws+gap) + (d-ws+1.6*gap)*B(r);
+const sm = x => x*x*(3-2*x);
+
+function goTo(t,instant){
+  t=Math.max(BASE,Math.min(BASE+N-1,t));
+  scrollTo({top:(t-BASE)*step,behavior:(instant||reduce)?'instant':'smooth'});
+  T=t;
+}
+const tFromScroll = () => BASE + scrollY/step;
+
+function swap(id, html, dir){
+  const box=$(id), n=document.createElement('span'); n.innerHTML=html; box.append(n);
+  if(reduce){[...box.children].forEach(c=>{if(c!==n)c.remove()});return}
+  const o={duration:650,easing:'cubic-bezier(.2,.8,.2,1)',fill:'both'};
+  n.animate([{transform:`translateY(${dir*105}%)`},{transform:'translateY(0)'}],o);
+  [...box.children].forEach(c=>{
+    if(c===n||c.dataset.leaving)return; c.dataset.leaving=1;
+    const from=getComputedStyle(c).transform; c.getAnimations().forEach(a=>a.cancel());
+    c.animate([{transform:from==='none'?'translateY(0)':from},{transform:`translateY(${-dir*105}%)`}],o).onfinish=()=>c.remove();
+  });
+}
+function setActive(i,dir){
+  active=i; const b=BOOKS[i];
+  swap('cT',b.title,dir);
+  swap('cS',`${b.genre} / کتاب ${ORD[i]}`,dir);
+  swap('cY',fa(b.year),dir);
+  const dec=Math.floor(b.year/10)*10;
+  document.querySelectorAll('.tabs button').forEach(t=>t.classList.toggle('on',t.dataset.dec==String(dec)));
+  placeInd();
+}
+function placeInd(){
+  const b=document.querySelector('.tabs button.on'), ind=$('ind'); if(!b)return;
+  ind.style.width=b.offsetWidth+'px'; ind.style.transform=`translateX(${b.offsetLeft}px)`;
+}
+
+$('next').onclick=()=>goTo(Math.round(T)+1);
+$('prev').onclick=()=>goTo(Math.round(T)-1);
+play.onclick=()=>openDetail();
+$('tabs').addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b)return;
+  const dec=b.dataset.dec;
+  const i = dec==='all' ? 0 : BOOKS.findIndex(f=>Math.floor(f.year/10)*10==dec);
+  goTo(BASE+i);
+});
+addEventListener('keydown',e=>{
+  if(e.key==='Escape'&&isOpen) return closeDetail();
+  if(isOpen){ if(e.key==='ArrowLeft'){e.preventDefault();go(1)} if(e.key==='ArrowRight'){e.preventDefault();go(-1)} return }
+  if(e.key==='ArrowLeft'){e.preventDefault();goTo(Math.round(T)+1)}
+  if(e.key==='ArrowRight'){e.preventDefault();goTo(Math.round(T)-1)}
+  if(e.key==='Enter'&&document.activeElement===document.body)openDetail();
+});
+addEventListener('scroll',()=>{ if(!isOpen) T=tFromScroll() },{passive:true});
+/* mouse wheel and trackpad: one gesture step moves exactly one book, so a small notch never snaps back */
+let wAcc=0, wLock=0, wIdle;
+addEventListener('wheel',e=>{
+  if(e.ctrlKey) return;
+  e.preventDefault();
+  if(isOpen){
+    const dl=Math.abs(e.deltaY)>=Math.abs(e.deltaX)?e.deltaY:-e.deltaX;
+    wAcc+=dl; clearTimeout(wIdle); wIdle=setTimeout(()=>{wAcc=0},180);
+    const nw=performance.now(); if(Math.abs(wAcc)>=40&&nw>wLock){ go(Math.sign(wAcc)); wAcc=0; wLock=nw+700 }
+    return;
+  }
+  const dlt = Math.abs(e.deltaY)>=Math.abs(e.deltaX) ? e.deltaY : -e.deltaX;
+  wAcc += e.deltaMode===1 ? dlt*33 : dlt;
+  clearTimeout(wIdle); wIdle=setTimeout(()=>{wAcc=0},180);
+  const now=performance.now();
+  if(Math.abs(wAcc)>=40 && now>wLock){
+    goTo(Math.round(T)+Math.sign(wAcc));
+    wAcc=0; wLock=now+380;
+  }
+},{passive:false});
+
+let dx0=0,T0=0,down=false;
+shelf.addEventListener('pointerdown',e=>{down=true;dragging=false;dx0=e.clientX;T0=T});
+addEventListener('pointermove',e=>{
+  mx=e.clientX; my=e.clientY;
+  if(!down)return;
+  const dx=e.clientX-dx0;
+  if(!dragging&&Math.abs(dx)>5){ dragging=true; document.documentElement.classList.add('free') }
+  if(dragging){
+    const t=Math.max(BASE,Math.min(BASE+N-1,T0+dx/(ws+gap)));
+    scrollTo({top:(t-BASE)*step,behavior:'instant'}); T=t;
+  }
+});
+addEventListener('pointerup',()=>{
+  if(dragging){suppress=true;document.documentElement.classList.remove('free');goTo(Math.round(T));setTimeout(()=>suppress=false,50)}
+  down=false;dragging=false;
+});
+addEventListener('pointercancel',()=>{down=false;dragging=false;document.documentElement.classList.remove('free')});
+
+let overBtn=false, curLab='باز کن';
+document.addEventListener('pointerover',e=>{overBtn=!!e.target.closest('button,a')&&!e.target.closest('.shelf')});
+
+let last=performance.now();
+function frame(now){
+  const dt=Math.min(.05,(now-last)/1000); last=now;
+  // critically damped spring: no overshoot, and velocity carries through when the target changes mid-move
+  if(reduce){ s=T; vel=0 }
+  else {
+    const w = dragging?24:9, h=dt/3;
+    for(let i=0;i<3;i++){ vel += (w*w*(T-s) - 2*w*vel)*h; s += vel*h }
+    if(Math.abs(T-s)<1e-4 && Math.abs(vel)<1e-3){ s=T; vel=0 }
+  }
+
+  const ai=((Math.round(s)%N)+N)%N;
+  if(ai!==active) setActive(ai, Math.sign(T-s)||1);
+
+  onCover = !isOpen && Math.abs(mx-W/2)<.55*d && Math.abs(my-cyShelf)<.55*H && Math.abs(T-s)<.3;
+  let tyT, txT;
+  if(onCover){ tyT=(mx-W/2)/(.55*d)*9; txT=-(my-cyShelf)/(H/2)*6 }
+  else { tyT = mx<0?0:(mx-W/2)/W*5; txT=0 }
+  const kt=1-Math.exp(-7*dt); tiltY+=(tyT-tiltY)*kt; tiltX+=(txT-tiltX)*kt;
+
+  const kl=reduce?1:1-Math.exp(-12*dt);
+  for(const t of books){
+    let r=((t.v-s)%TOT+TOT)%TOT; if(r>TOT/2)r-=TOT; t.r=r;
+    const x=-F(r);
+    const vis = Math.abs(x)<=W/2+1.5*d;
+    if(vis!==t.vis){ t.el.style.visibility=vis?'':'hidden'; t.vis=vis }
+    if(!vis) continue;
+    t.lt = (hoverV===t.v && Math.abs(r)>.5 && !isOpen)?1:0;
+    t.lift += (t.lt-t.lift)*kl;
+    const o=sm(Math.max(0,1-Math.abs(r)));
+    const ry=90*o+tiltY*o, rx=tiltX*o, rz=-4.5*o;
+    const tz=o*.2*H, ty=-o*.025*H - t.lift*.045*H;
+    const tr=`translate3d(${x.toFixed(2)}px,${ty.toFixed(2)}px,${tz.toFixed(2)}px) rotateZ(${rz.toFixed(3)}deg) rotateX(${rx.toFixed(3)}deg) rotateY(${ry.toFixed(3)}deg)`;
+    if(tr!==t.tr){ t.el.style.transform=tr; t.tr=tr }
+    const z=Math.round(100-Math.abs(r)*4); if(z!==t.z){ t.el.style.zIndex=z; t.z=z }
+    const s1=(o*.55).toFixed(3), s2=((1-o)*.5).toFixed(3);
+    if(s1!==t.k1){ t.sh1.style.opacity=s1; t.k1=s1 }
+    if(s2!==t.k2){ t.sh2.style.opacity=s2; t.k2=s2 }
+  }
+
+  const ps = isOpen?0:sm(Math.max(0,1-Math.abs(T-s)*3));
+  play.style.left=(W/2-.5*d-6)+'px'; play.style.top=(cyShelf+.36*H)+'px';
+  play.style.transform=`scale(${ps})`;
+
+  const kc=1-Math.exp(-16*dt);
+  if(cx<-900){cx=mx;cy=my} cx+=(mx-cx)*kc; cy+=(my-cy)*kc;
+  cur.style.transform=`translate3d(${cx}px,${cy}px,0)`;
+  const overSpine = hoverV>=0 && !isOpen && Math.abs(books[hoverV].r)>.5;
+  let lab='باز کن', on=onCover;
+  if(reading && geo){
+    const bx=ob.getBoundingClientRect(), sx=spineX(), L=sx-geo.ww, Rr=sx+geo.ww;
+    if(!overBtn && my>bx.top && my<bx.bottom && mx>L && mx<Rr){
+      const fwd=mx<sx, can = narrow()? (fwd?pIdx<PAGES-1:pIdx>0) : (fwd?k<SPREADS-1:k>0);
+      if(can){ on=true; lab=fwd?'ورق بزن':'برگرد' }
+    }
+  }
+  if(curLab!==lab){ cur.querySelector('.txt').textContent=lab; curLab=lab }
+  cur.classList.toggle('open',on);
+  cur.classList.toggle('spine',!on&&overSpine);
+  cur.classList.toggle('btn',!on&&!overSpine&&overBtn);
+
+  requestAnimationFrame(frame);
+}
+
+
+/* ===== the open book ===== */
+const opener=$('opener'), ob=$('ob'), spread=$('spread'), backdrop=$('backdrop'), rui=$('rui');
+const R = ms => reduce?1:ms;
+const wait = ms => new Promise(r=>setTimeout(r,ms));
+const OPEN_EASE='cubic-bezier(.45,0,.2,1)', FLY='cubic-bezier(.65,0,.35,1)', FLIP='cubic-bezier(.42,.04,.22,1)';
+const ORN=`<svg class="orn" viewBox="0 0 120 12"><path d="M0 6 H48 M72 6 H120" stroke="currentColor"/><path d="M60 1 L65 6 L60 11 L55 6Z" fill="currentColor"/></svg>`;
+let busy=false, openBook=null, geo=null, reading=false, k=0, pIdx=1, flyleaves=[], sheets=[], cover=null;
+const SPREADS=3, PAGES=6;
+const narrow = () => W<768;
+
+/* angles: unflipped pages lean a hair off the block, flipped ones settle on the other side; the newest is always on top */
+const A0={fly:[3.2,2.9], s:[1.8,1.0]}, A1={fly:[178.6,178.2], s:[177.6,177.0]}, COVER_OPEN=179.4;
+
+function face(cls, html){return `<div class="pf ${cls}">${html}<i class="sh"></i></div>`}
+function plate(b){return `<svg viewBox="50 395 500 420"><rect x="0" y="0" width="600" height="900" fill="${b.bg}"/>${motif(b)}</svg>`}
+function buildBook(b){
+  const n=b.i;
+  spread.innerHTML=`
+  <div class="pg">${`<div class="page"><span class="run">${b.title}</span>
+      <div class="chap-n">فصل یکم</div><h3 class="h">${b.lines.join(' ')}</h3>
+      <p class="body">${EXC[n]}</p>
+      <div class="endmark">${ORN}<span class="small">پایان بخش نمونه</span><button class="btn" data-close>بستن کتاب</button></div>
+      <span class="pn" style="left:10cqw">${fa(5)}</span></div>`}</div>
+  <div class="sheet" data-s="1">${face('f',`<div class="page"><span class="run">${b.title}</span>
+      <h3 class="h">دربارهٔ کتاب</h3><p class="body">${b.syn}</p>
+      <p class="id-note">کتاب ${ORD[n]} از دوازده کتاب لئون وازاری، نخستین بار در سال ${fa(b.year)} منتشر شد.</p>
+      <span class="pn">${fa(3)}</span></div>`)}${face('b',`<div class="page"><span class="run">لئون وازاری</span>
+      <div class="plate">${plate(b)}</div><p class="cap2">تصویری از «${b.title}»</p><span class="pn">${fa(4)}</span></div>`)}</div>
+  <div class="sheet" data-s="0">${face('f',`<div class="page center"><span class="tp-a">لئون وازاری</span><b class="tp-t">${b.title}</b>${ORN}
+      <span class="tp-p">نشر قفسه / ${fa(b.year)}</span></div>`)}${face('b',`<div class="page"><h3 class="h">شناسنامهٔ کتاب</h3>
+      <dl class="id"><dt>عنوان</dt><dd>${b.title}</dd><dt>نویسنده</dt><dd>لئون وازاری</dd><dt>گونه</dt><dd>${b.genre}</dd>
+      <dt>چاپ نخست</dt><dd>${fa(b.year)}</dd><dt>شمار صفحه</dt><dd>${fa(b.pages)}</dd><dt>ناشر</dt><dd>نشر قفسه</dd></dl>
+      <p class="id-note">همهٔ حقوق برای نویسنده محفوظ است.</p><span class="pn">${fa(2)}</span></div>`)}</div>
+  <div class="sheet" data-f="1">${face('f','')}${face('b',`<div class="page center"><p class="ded">برای آن‌ها<br>که قفسه‌ها را پر کردند.</p></div>`)}</div>
+  <div class="sheet" data-f="0">${face('f','')}${face('b','')}</div>
+  <div class="front"><svg viewBox="0 0 600 900" preserveAspectRatio="none">${coverMarkup(b,'o')}</svg><div class="endpaper" style="--ep:${b.bg}"></div></div>`;
+  sheets=[0,1].map(i=>spread.querySelector(`[data-s="${i}"]`));
+  flyleaves=[0,1].map(i=>spread.querySelector(`[data-f="${i}"]`));
+  cover=spread.querySelector('.front');
+  sheets.forEach((s,i)=>s.style.transform=`rotateY(${A0.s[i]}deg)`);
+  flyleaves.forEach((f,i)=>f.style.transform=`rotateY(${A0.fly[i]}deg)`);
+  cover.style.transform='rotateY(0deg)';
+  spread.querySelector('[data-close]').onclick=e=>{e.stopPropagation();closeDetail()};
+}
+/* move an element from its current transform to a new one, leaving no fills behind */
+function tween(el, to, opt){
+  const from=el.style.transform||'none';
+  el.style.transform=to;
+  return el.animate([{transform:from},{transform:to}],opt);
+}
+function shiftFor(p){ return narrow() ? (p%2===0 ? -geo.ww : 0) : -geo.ww/2 }
+function spineX(){ return W/2+geo.ww/2+shiftFor(pIdx) }
+function updateUI(){
+  $('pcount').textContent = narrow() ? `صفحهٔ ${fa(pIdx+1)} از ${fa(PAGES)}` : `${fa(k+1)} از ${fa(SPREADS)}`;
+  $('pnext').disabled = narrow() ? pIdx>=PAGES-1 : k>=SPREADS-1;
+  $('pprev').disabled = narrow() ? pIdx<=0 : k<=0;
+}
+function flipSheet(i, forward, delay=0){
+  const s=sheets[i], to=forward?A1.s[i]:A0.s[i];
+  const o={duration:R(1000),delay:R(delay),easing:FLIP};
+  tween(s,`rotateY(${to}deg)`,o);
+  const [shF,shB]=[...s.querySelectorAll('.sh')];
+  // light falls across the page as it turns
+  shF.animate([{opacity:0},{opacity:forward?.32:0},{opacity:forward?.4:0}],o);
+  shB.animate([{opacity:forward?.4:0},{opacity:.22},{opacity:0}],{...o,direction:forward?'normal':'reverse'});
+}
+function go(dir){
+  if(!reading||busy) return;
+  if(narrow()){
+    const np=pIdx+dir; if(np<0||np>=PAGES) return;
+    const nk=Math.floor(np/2);
+    if(nk!==k){ flipSheet(dir>0?k:nk, dir>0); k=nk }
+    pIdx=np;
+    tween(spread,`translateX(${shiftFor(pIdx)}px)`,{duration:R(nk!==k?1000:700),easing:FLIP});
+  } else {
+    const nk=k+dir; if(nk<0||nk>=SPREADS) return;
+    flipSheet(dir>0?k:nk, dir>0); k=nk; pIdx=k*2+1;
+  }
+  updateUI();
+}
+$('pnext').onclick=()=>go(1);
+$('pprev').onclick=()=>go(-1);
+ob.addEventListener('click',e=>{ if(!reading||e.target.closest('button'))return; go(e.clientX<spineX()?1:-1) });
+let rx0=null;
+ob.addEventListener('pointerdown',e=>{rx0=e.clientX});
+ob.addEventListener('pointerup',e=>{ if(rx0!==null&&Math.abs(e.clientX-rx0)>40){ suppressR=true; go(e.clientX>rx0?1:-1) } rx0=null });
+let suppressR=false;
+ob.addEventListener('click',e=>{ if(suppressR){suppressR=false;e.stopImmediatePropagation()} },true);
+
+function revealUI(show){
+  rui.style.visibility='visible';
+  rui.querySelectorAll('.m>*').forEach((el,i)=>{
+    el.getAnimations().forEach(a=>a.cancel());
+    el.animate(show?[{transform:'translateY(110%)'},{transform:'none'}]:[{transform:'none'},{transform:'translateY(110%)'}],
+      {duration:R(show?800:420),delay:R(show?i*70:0),easing:'cubic-bezier(.2,.8,.2,1)',fill:'both'});
+  });
+  [$('pnext'),$('pprev')].forEach(b=>b.animate(show?[{transform:'scale(0)'},{transform:'scale(1)'}]:[{transform:'scale(1)'},{transform:'scale(0)'}],{duration:R(600),delay:R(show?250:0),easing:'cubic-bezier(.2,.8,.2,1)',fill:'both'}));
+}
+function shelfTransform(t){
+  const r=t.cv.getBoundingClientRect(), sc=2200/(2200-(.2*H+ws/2));
+  return `translate(${r.left+r.width/2-W/2}px,${r.top+r.height/2-Hv/2}px) scale(${d*sc/geo.ww}) rotate(-4.5deg)`;
+}
+function layoutBook(){
+  const ww = narrow() ? Math.min(W*.86,(Hv-170)/1.5) : Math.min((Hv-190)/1.5, W*.4);
+  geo={ww,hh:ww*1.5};
+  Object.assign(ob.style,{width:ww+'px',height:geo.hh+'px',left:(W/2-ww/2)+'px',top:(Hv/2-geo.hh/2+(narrow()?-8:6))+'px'});
+}
+async function openDetail(){
+  if(isOpen||busy)return; busy=true;
+  goTo(Math.round(T),true); s=T; vel=0;
+  const b=BOOKS[active];
+  isOpen=true; document.documentElement.classList.add('locked');
+  k=0; pIdx=1;
+  layoutBook(); buildBook(b);
+  openBook=books.find(t=>Math.abs(t.r)<.5)||books[BASE];
+  const r=openBook.cv.getBoundingClientRect(), cxp=r.left+r.width/2, cyp=r.top+r.height/2;
+  ob.style.transform='none'; spread.style.transform='translateX(0)';
+  opener.style.visibility='visible'; openBook.el.style.opacity=0;
+  backdrop.style.visibility='visible';
+  backdrop.animate([{clipPath:`circle(0px at ${cxp}px ${cyp}px)`},{clipPath:`circle(${Math.hypot(W,Hv)}px at ${cxp}px ${cyp}px)`}],{duration:R(1100),easing:FLY,fill:'both'});
+  // 1. lift off the shelf, straighten, grow
+  ob.animate([{transform:shelfTransform(openBook)},{transform:'none'}],{duration:R(800),easing:FLY});
+  // 2. the cover opens on its right-hand spine, two flyleaves follow, and the spread centres itself
+  const o={duration:R(1150),delay:R(600),easing:OPEN_EASE};
+  tween(cover,`rotateY(${COVER_OPEN}deg)`,o);
+  flyleaves.forEach((f,i)=>tween(f,`rotateY(${A1.fly[i]}deg)`,{duration:R(1050),delay:R(740+i*110),easing:OPEN_EASE}));
+  tween(spread,`translateX(${shiftFor(pIdx)}px)`,o);
+  updateUI();
+  await wait(R(1200)); revealUI(true);
+  await wait(R(800));
+  if(!isOpen){busy=false;return}
+  reading=true; opener.classList.add('reading');
+  $('close').focus({preventScroll:true});
+  busy=false;
+}
+async function closeDetail(){
+  if(!isOpen||busy)return; busy=true;
+  reading=false; opener.classList.remove('reading');
+  revealUI(false);
+  // turn back any read pages
+  const back=[]; for(let i=sheets.length-1;i>=0;i--) if(k>i) back.push(i);
+  back.forEach((i,j)=>flipSheet(i,false,j*120));
+  if(back.length) await wait(R(600+back.length*120));
+  k=0; pIdx=1;
+  const o={duration:R(900),easing:OPEN_EASE};
+  flyleaves.slice().reverse().forEach((f,j)=>tween(f,`rotateY(${A0.fly[1-j]}deg)`,{...o,delay:R(j*90)}));
+  tween(cover,`rotateY(0deg)`,{...o,delay:R(160)});
+  tween(spread,'translateX(0)',{...o,delay:R(160)});
+  await wait(R(1000));
+  const r=openBook.cv.getBoundingClientRect(), cxp=r.left+r.width/2, cyp=r.top+r.height/2;
+  backdrop.animate([{clipPath:`circle(${Math.hypot(W,Hv)}px at ${cxp}px ${cyp}px)`},{clipPath:`circle(0px at ${cxp}px ${cyp}px)`}],{duration:R(800),easing:FLY,fill:'both'});
+  await tween(ob,shelfTransform(openBook),{duration:R(750),easing:FLY}).finished.catch(()=>{});
+  openBook.el.style.opacity='';
+  opener.style.visibility='hidden'; rui.style.visibility='hidden'; backdrop.style.visibility='hidden';
+  backdrop.getAnimations().forEach(a=>a.cancel());
+  isOpen=false; document.documentElement.classList.remove('locked');
+  goTo(Math.round(T),true);
+  busy=false;
+}
+$('close').onclick=closeDetail;
+
+measure();
+addEventListener('resize',()=>{const i=measure(); if(isOpen&&geo){layoutBook(); spread.style.transform=`translateX(${shiftFor(pIdx)}px)`; updateUI()} else goTo(BASE+Math.round(i),true); placeInd()});
+if('scrollRestoration' in history) history.scrollRestoration='manual';
+T=s=BASE+5;
+requestAnimationFrame(()=>{scrollTo({top:5*step,behavior:'instant'}); T=s=BASE+5; requestAnimationFrame(frame)});
+document.fonts && document.fonts.ready.then(placeInd);
+</script>
+</body>
+</html>
