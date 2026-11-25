@@ -1,6 +1,6 @@
 # persian-bookshelf
 
-prompt: # Prompt: Leon Vasari, Persian 3D bookshelf (کتاب‌شناسی لئون وازاری)
+# Prompt: Leon Vasari, Persian 3D bookshelf (کتاب‌شناسی لئون وازاری)
 
 Build a single-page, scroll-driven 3D bookshelf for a fictional author, Leon Vasari (لئون وازاری). Use one HTML file with plain HTML, CSS and vanilla JavaScript: no framework, no build step, no libraries, and no images (every cover and spine is drawn with inline SVG). The whole page is Persian and right-to-left: `<html lang="fa" dir="rtl">`, Persian digits everywhere (۱۹۷۱), no letter-spacing on Persian text.
 
